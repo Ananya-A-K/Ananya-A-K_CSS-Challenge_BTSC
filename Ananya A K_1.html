@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ball Maze Animation</title>
+    <style>
+      canvas {
+        border: 1px solid black;
+      }
+      body,
+      html {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      .maze {
+        position: relative;
+        width: 500px;
+        height: 500px;
+        background: white;
+        border: white;
+        overflow: hidden;
+      }
+      .ball {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: 40px;
+        height: 40px;
+        background-color: red;
+        border-radius: 50%;
+        animation: moveBall 10s linear infinite;
+      }
+      .controls {
+        margin-top: 20px;
+      }
+      @keyframes moveBall {
+        0% {
+          top: 0px;
+          left: 50%;
+        }
+        20% {
+          top: 100px;
+          left: 50%;
+        }
+        40% {
+          top: 100px;
+          left: 75%;
+        }
+        60% {
+          top: 250px;
+          left: 75%;
+        }
+        80% {
+          top: 250px;
+          left: 50%;
+        }
+        100% {
+          top: 400px;
+          left: 50%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="maze">
+      <canvas id="mazeCanvas" width="500" height="500"></canvas>
+      <div class="ball"></div>
+    </div>
+    <div class="controls">
+      <button id="startBtn">Start</button>
+      <button id="stopBtn">Stop</button>
+      <button id="resumeBtn">Resume</button>
+    </div>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const canvas = document.getElementById("mazeCanvas");
+        const ctx = canvas.getContext("2d");
+
+        // Maze dimensions and path
+        const maze = [
+          [1, 1, 1, 0, 1, 1, 1],
+          [1, 1, 1, 0, 0, 0, 1],
+          [1, 1, 1, 1, 0, 0, 1],
+          [1, 1, 1, 0, 0, 0, 1],
+          [1, 1, 1, 0, 1, 1, 1],
+          [1, 1, 1, 0, 1, 1, 1],
+        ];
+        const cellSize = 80;
+        function drawMaze() {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          for (let row = 0; row < maze.length; row++) {
+            for (let col = 0; col < maze[row].length; col++) {
+              if (maze[row][col] === 1) {
+                ctx.fillStyle = "black";
+                ctx.fillRect(
+                  col * cellSize,
+                  row * cellSize,
+                  cellSize,
+                  cellSize
+                );
+              }
+            }
+          }
+        }
+
+        drawMaze();
+      });
+      document.addEventListener("DOMContentLoaded", function () {
+        const ball = document.querySelector(".ball");
+        const startBtn = document.getElementById("startBtn");
+        const stopBtn = document.getElementById("stopBtn");
+        const resumeBtn = document.getElementById("resumeBtn");
+
+        startBtn.addEventListener("click", function () {
+          // Reset the ball to the initial position
+          ball.style.top = "0";
+          ball.style.left = "50%";
+          // Remove the animation
+          ball.style.animation = "none";
+          // Force a reflow
+          void ball.offsetWidth;
+          // Re-apply the animation
+          ball.style.animation = "moveBall 10s linear infinite";
+          ball.style.animationPlayState = "running";
+        });
+
+        stopBtn.addEventListener("click", function () {
+          ball.style.animationPlayState = "paused";
+        });
+
+        resumeBtn.addEventListener("click", function () {
+          ball.style.animationPlayState = "running";
+        });
+      });
+    </script>
+  </body>
+</html>
